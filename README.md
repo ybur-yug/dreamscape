@@ -1,37 +1,39 @@
-# Setup
-## Beginning
-#### These instructions are for Ubuntu 15.04. YMMV on other OS's
-To start, run `setup_part_1.sh`
+# Setting Up Caffe For Google's Deepdream
 
-Next, if you want to utilize the gpu (much faster) we will need to set up and install CUDA. This is not
-trivially scriptable, but you can find precise directions and downloads [here](http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-linux/#axzz3f2tBHDG9).
+#### Requirements
+- Ubuntu 14.04 64 bit fresh VM
+- a single normal user setup
 
-Now, `setup_part_2.sh` is good to be ran.
+## Usage
+First,
 
-This will install all dependencies of caffe, and get the Makefile config ready for us. What you
-should find after this runs is vi opening the makefile config we have created. On line `33`
-or somewhere around there, you should see the blas settings. We will change `Atlas` to `open.`
+`sh setup_caffe.sh`
 
-We will also want to go to the line setting our cuda dir. It should currently look like this:
+Now, you will need to make a Makefile config
 
-```makefile
+`cp Makefile.config.example Makefile.config`
+
+And we change just a few simple things:
+
+First we change the line
+
+`# CPU_ONLY := 1`
+
+to be
+
+`CPU_ONLY := 1`
+
+removing the comment. And in our `PYTHON_INCLUDE` line's secont argugment to include `/local/` so it should read
+
+```
 ...
-# CUDA directory contains bin/ and lib/ directories that we need.
-CUDA_DIR := /usr/local/cuda
-# On Ubuntu 14.04, if cuda tools are installed via
-# "sudo apt-get install nvidia-cuda-toolkit" then use this instead:
-# CUDA_DIR := /usr
+PYTHON_INCLUDE := /usr/include/python2.7 \
+                /usr/local/lib/dist-packages/numpy/core/include
 ...
 ```
 
-We want to uncomment the line `# CUDE_DIR := /usr`, and comment out `CUDA_DIR :=/usr/local/CUDA`
+And with this, we can now build:
 
-If you have any trouble with the makefile, you may need to change your cpu to not use CUDA.
-You can look into the makefile config to fix this.
+`sh make_caffe.sh`
 
-
-#### Todo: go over `CPU_ONLY` over `CUDA`
-
-At this point we can run `setup_part_3.sh`, but it doesnt work for me. Somethings up with BLAS :(
-
-### To be continued. I'll figure it out.
+And you are set up to utilize google's tutorial/notebook [here](https://github.com/google/deepdream)
